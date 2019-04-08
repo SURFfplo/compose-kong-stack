@@ -1,5 +1,9 @@
 # compose-aai-stack
-Compose file that currently allows for the setup of an appnet network and a running kong oidc service
+Compose file that currently allows for the setup of an appnet network and a running kong oidc service. For easy installation run 
+`
+sh initial_run.sh
+`
+Running this file will help you through the installation and will provide you with a running docker image of KONG with the Nokia OIDC plugin also installed.
 
 # Standard Kong installation with Nokia OIDC plugin added to base install
 This Install also has the Nokia OIDC plugin installed:
