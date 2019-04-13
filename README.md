@@ -1,4 +1,4 @@
-# compose-aai-stack
+# compose-kong-stack
 Compose file that currently allows for the setup of an appnet network and a running kong oidc service. For easy installation run 
 `
 sh initial_run.sh
@@ -43,6 +43,8 @@ curl -i -X POST \
 # visualising tha admin-api in a web application
 The professional version of Kong has it's own web application. In the open source version there is no web front end. 
 An open source alternative can be found at: https://github.com/pantsel/konga
+
+This Konga frontend now also comes with this stack
 
 # for local testing
 If you'd like to test this API manager and OIDC you need to be able to reach the machine de API is running on from the internet. A paid sollution to do this is ngrok an other sollution that works equally well is https://serveo.net
