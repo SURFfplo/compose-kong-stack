@@ -55,7 +55,6 @@ docker-compose build kong
 echo -e "${green}Done....${nc}"
 
 
-
 echo -e "${yellow}
 # Build kong-db container 
 #############################################################################${nc}"
@@ -75,7 +74,6 @@ docker-compose build konga
 echo -e "${green}Done....${nc}"
 
 
-
 echo -e "${yellow}
 # Create folder structure for psql container
 #############################################################################${nc}"
@@ -88,6 +86,10 @@ echo -e "${yellow}
 # Create the service
 #############################################################################${nc}"
 docker stack deploy -c docker-compose.yml aai
+
+echo -e "${yellow}
+# remove services that will need separate initializing
+#############################################################################${nc}"
 docker service rm aai_kong 
 docker service rm aai_konga 
 echo -e "${green}Done....${nc}"
@@ -112,7 +114,6 @@ containerid="$(docker container ps -q -f 'name=kong')"
 echo $containerid
 # todo stuff
 docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name docker-temp2 --env DB_USER=kong --env DB_ADAPTER=postgres --env DB_HOST=kong-db --env DB_PORT=5432 --env DB_DATABASE=konga_database --env DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --env NODE_ENV=prep --network appnet konga -c prepare_docker_env -a postgres
-#-u postgresql://localhost:5432/konga_database
 echo -e "${green}Done....${nc}"
 sleep 5
 
@@ -120,10 +121,9 @@ echo -e "${yellow}
 # Clean-up stopped containers and initialisation service 
 #############################################################################${nc}"
 #remove temp service after initial boot
-#docker service rm docker-temp1 
-#docker service rm docker-temp2 
-#docker rm $(docker ps -f "status=exited" -q)
-
+docker service rm docker-temp1 
+docker service rm docker-temp2 
+docker rm $(docker ps -f "status=exited" -q)
 echo -e "${green}Done....${nc}"
 
 echo -e "${yellow}
