@@ -16,15 +16,14 @@ clear
 echo -e "${yellow}
 # Remove current services  
 #############################################################################${nc}"
-docker service rm $(docker service ls -q) 
+docker service rm $(docker service ls --filter name=aai -q) 
 echo -e "${green}Done....${nc}"
 
-echo -e "${yellow}
+#echo -e "${yellow}
 # Remove current network
 #############################################################################${nc}"
-docker network rm appnet 
-echo -e "${green}Done....${nc}"
-
+#docker network rm appnet 
+#echo -e "${green}Done....${nc}"
 
 
 sleep 5
@@ -39,8 +38,7 @@ echo -e "${green}Done....${nc}"
 echo -e "${yellow}
 # Remove current secrets and configs
 #############################################################################${nc}"
-docker secret rm $(docker secret ls --filter name=edutrac -q)
-docker config rm $(docker config ls --filter name=cnf -q)
+docker secret rm $(docker secret ls --filter name=kong -q)
 echo -e "${green}Done....${nc}"
 
 
