@@ -103,7 +103,7 @@ echo -e "${yellow}
 containerid="$(docker container ps -q -f 'name=kong')"
 echo $containerid
 # todo stuff
-docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name docker-temp1 --env KONG_DATABASE=postgres --env KONG_PG_HOST=kong-db --env KONG_PG_PORT=5432 --env KONG_PG_DATABASE=api-gw --env KONG_PG_DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --network appnet kong-oidc kong migrations bootstrap
+docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name docker-temp1 --env KONG_DATABASE=postgres --env KONG_PG_HOST=kong-db --env KONG_PG_PORT=5432 --env KONG_PG_DATABASE=api-gw --env KONG_PG_DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --network appnet kong kong migrations bootstrap
 echo -e "${green}Done....${nc}"
 sleep 5
 
