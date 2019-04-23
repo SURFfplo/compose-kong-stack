@@ -47,18 +47,18 @@ echo -e "${yellow}
 # Check if kong containter is available and build if needed
 #############################################################################${nc}"
 DIRECTORY='image-kong'
-if [ ! -d ../"$DIRECTORY" ]; then
-  echo " https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY" "
-  git clone https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY"
-fi
-docker-compose build kong 
+#if [ ! -d ../"$DIRECTORY" ]; then
+#  echo " https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY" "
+#  git clone https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY"
+#fi
+#docker build ../"$DIRECTORY" -t kong-oidc
 echo -e "${green}Done....${nc}"
 
 
 echo -e "${yellow}
 # Build kong-db container 
 #############################################################################${nc}"
-docker-compose build kong-db
+#docker-compose build kong-db
 echo -e "${green}Done....${nc}"
 
 
@@ -70,7 +70,7 @@ if [ ! -d ../"$DIRECTORY" ]; then
   echo " https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY" "
   git clone https://github.com/SURFfplo/"$DIRECTORY".git ../"$DIRECTORY"
 fi
-docker-compose build konga
+#docker build ../"$DIRECTORY" -t konga
 echo -e "${green}Done....${nc}"
 
 
@@ -90,7 +90,7 @@ docker stack deploy -c docker-compose.yml aai
 echo -e "${yellow}
 # remove services that will need separate initializing
 #############################################################################${nc}"
-docker service rm aai_kong 
+docker service rm aai_kong-oidc 
 docker service rm aai_konga 
 echo -e "${green}Done....${nc}"
 
@@ -103,9 +103,9 @@ echo -e "${yellow}
 containerid="$(docker container ps -q -f 'name=kong')"
 echo $containerid
 # todo stuff
-docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name docker-temp1 --env KONG_DATABASE=postgres --env KONG_PG_HOST=kong-db --env KONG_PG_PORT=5432 --env KONG_PG_DATABASE=api-gw --env KONG_PG_DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --network appnet kong kong migrations bootstrap
+docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name kong-temp1 --env KONG_DATABASE=postgres --env KONG_PG_HOST=kong-db --env KONG_PG_PORT=5432 --env KONG_PG_DATABASE=api-gw --env KONG_PG_DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --network appnet kong-oidc kong migrations bootstrap
 echo -e "${green}Done....${nc}"
-sleep 5
+sleep 10
 
 echo -e "${yellow}
 # Initialize konga container
@@ -113,17 +113,17 @@ echo -e "${yellow}
 containerid="$(docker container ps -q -f 'name=kong')"
 echo $containerid
 # todo stuff
-docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name docker-temp2 --env DB_USER=kong --env DB_ADAPTER=postgres --env DB_HOST=kong-db --env DB_PORT=5432 --env DB_DATABASE=konga_database --env DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --env NODE_ENV=prep --network appnet konga -c prepare_docker_env -a postgres
+docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name kong-temp2 --env DB_USER=kong --env DB_ADAPTER=postgres --env DB_HOST=kong-db --env DB_PORT=5432 --env DB_DATABASE=konga_database --env DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --env NODE_ENV=prep --network appnet konga -c prepare_docker_env -a postgres
 echo -e "${green}Done....${nc}"
-sleep 5
+sleep 10
 
 echo -e "${yellow}
 # Clean-up stopped containers and initialisation service 
 #############################################################################${nc}"
 #remove temp service after initial boot
-docker service rm docker-temp1 
-docker service rm docker-temp2 
-docker rm $(docker ps -f "status=exited" -q)
+#docker service rm docker-temp1 
+#docker service rm docker-temp2 
+#docker rm $(docker ps -f "status=exited" -q)
 echo -e "${green}Done....${nc}"
 
 echo -e "${yellow}

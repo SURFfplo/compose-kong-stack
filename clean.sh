@@ -16,7 +16,7 @@ clear
 echo -e "${yellow}
 # Remove current services  
 #############################################################################${nc}"
-docker service rm $(docker service ls --filter name=aai -q) 
+docker service rm $(docker service ls --filter name=kong -q) 
 echo -e "${green}Done....${nc}"
 
 #echo -e "${yellow}

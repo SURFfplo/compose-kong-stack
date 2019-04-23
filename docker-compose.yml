@@ -28,8 +28,10 @@ services:
       POSTGRES_USER:     kong
       POSTGRES_DB_PASSWORD_FILE: /run/secrets/kong_db_dba_password
 
-  kong:
-    image: kong
+      
+  kong-oidc:
+#    image: kong
+    image: kong-oidc
     build: ../image-kong/
     secrets:
       - kong_db_dba_password
@@ -54,15 +56,13 @@ services:
       KONG_ADMIN_ERROR_LOG:  /dev/stderr
       KONG_PROXY_LISTEN:     0.0.0.0:8000, 0.0.0.0:8443 ssl
       KONG_ADMIN_LISTEN:     0.0.0.0:8001, 0.0.0.0:8444 ssl
-      KONG_PLUGINS:          oidc
+      #      KONG_PLUGINS:          oidc
 
   konga:
     image: konga
     build: ../image-konga/
     secrets:
       - kong_db_dba_password
-    depends_on: 
-      - kong
     networks:
       - appnet
     ports:
