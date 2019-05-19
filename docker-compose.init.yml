@@ -16,7 +16,7 @@ services:
   kong-db:
     image: postgres:9.6
     volumes:
-      - .data/kong/psql:/var/lib/postgresql/data
+      - /mnt/nfs/nfsdlo/$STACK_NETWORK/kong-0.1/psql:/var/lib/postgresql/data
     secrets:
       - kong_db_dba_password
     networks:
@@ -28,7 +28,6 @@ services:
       POSTGRES_USER:     kong
       POSTGRES_DB_PASSWORD_FILE: /run/secrets/kong_db_dba_password
 
-      
   kong-oidc:
     image: kong-oidc
     secrets:
@@ -37,6 +36,11 @@ services:
       - kong-db
     networks:
       - dev-net
+    command: bash -c "kong migrations bootstrap"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none  
     ports:
       - "8000:8000" # Listener
       - "8001:8001" # Admin API
@@ -55,23 +59,3 @@ services:
       KONG_PROXY_LISTEN:     0.0.0.0:8000, 0.0.0.0:8443 ssl
       KONG_ADMIN_LISTEN:     0.0.0.0:8001, 0.0.0.0:8444 ssl
       KONG_PLUGINS:          oidc
-
-  konga:
-    image: konga
-    secrets:
-      - kong_db_dba_password
-    networks:
-      - dev-net
-    ports:
-      - "1337:1337" # Port for API frontend
-    environment:
-      NODE_ENV:         production
-      TOKEN_SECRET:     rwekaneewnkan
-      DB_ADAPTER:       postgres
-      DB_HOST:          kong-db
-      DB_PORT:          5432
-      DB_USER:          kong
-      DB_MYUSER:        kong
-      DB_PASSWORD_FILE: /run/secrets/kong_db_dba_password
-      DB_DATABASE:      konga_database
-      KONGA_HOOK_TIMEOUT: 120000
