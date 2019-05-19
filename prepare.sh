@@ -6,7 +6,7 @@ mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE-$STACK_VERSION/psql
 
 
 # remove any old secrest and configs
-#docker secret rm $(docker secret ls -f name=kong -q)
+docker secret rm $(docker secret ls -f name=kong -q)
 
 # create secrets for database
 # e.g. date |md5sum|awk '{print $1}' | docker secret create my_secret -
