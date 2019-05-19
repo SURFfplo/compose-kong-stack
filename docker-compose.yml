@@ -10,7 +10,7 @@ secrets:
           
 services:
   kong-db:
-    image: postgres:9.6
+    image: 192.87.106.18:56001/postgres:0.1
     volumes:
       - /mnt/nfs/nfsdlo/$STACK_NETWORK/kong-0.1/psql:/var/lib/postgresql/data
     secrets:
@@ -26,7 +26,7 @@ services:
 
       
   kong-oidc:
-    image: kong-oidc
+    image: 192.87.106.18:56001/kong-oidc:0.1
     secrets:
       - kong_db_dba_password
     depends_on:
@@ -53,7 +53,7 @@ services:
       KONG_PLUGINS:          oidc
 
   konga:
-    image: konga
+    image: 192.87.106.18:56001/konga:0.1
     secrets:
       - kong_db_dba_password
     networks:
