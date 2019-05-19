@@ -4,19 +4,15 @@ networks:
   dev-net:
     external: true
 
-volumes:
-  kong-datastore:
-
 secrets:
   kong_db_dba_password:
     external: true
-          
           
 services:
   kong-db:
     image: postgres:9.6
     volumes:
-      - .data/kong/psql:/var/lib/postgresql/data
+      - /mnt/nfs/nfsdlo/$STACK_NETWORK/kong-0.1/psql:/var/lib/postgresql/data
     secrets:
       - kong_db_dba_password
     networks:

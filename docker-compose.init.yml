@@ -4,13 +4,9 @@ networks:
   dev-net:
     external: true
 
-volumes:
-  kong-datastore:
-
 secrets:
   kong_db_dba_password:
     external: true
-          
           
 services:
   kong-db:
