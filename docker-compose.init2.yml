@@ -59,7 +59,7 @@ services:
       - dev-net
     ports:
       - "1337:1337" # Port for API frontend
-    command: bash -c "prepare_docker_env" -a "postgres"
+    command: "-c prepare_docker_env -a postgres"
     deploy:
       replicas: 1
       restart_policy:
