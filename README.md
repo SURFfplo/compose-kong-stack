@@ -29,6 +29,7 @@ curl -i -X POST \
   --url http://localhost:8001/services/ooapi_posts/routes/ \
   --data 'paths[]=/posts'
 ```
+After running the code above we can now use our new endpoint: http://localhost:8000/post 
 
 Important now we need to remember the serviceID that corrseponds with the route so we can setup openid-connect/authorize
 ```
@@ -36,7 +37,7 @@ curl -i -X POST \
   --url http://localhost:8001/services/<serviceID>/plugins/ \
     --data "name=oidc" \
     --data "config.client_id=<myckientID @ well-known>" \
-    --data "config.client_secret=<wouldn't you lie to know @ well-known>" \
+    --data "config.client_secret=<wouldn't you like to know @ well-known>" \
     --data "config.discovery=https%3A%2F%2F<URL of well-known>%2F.well-known%2Fopenid-configuration"
 ```
 
