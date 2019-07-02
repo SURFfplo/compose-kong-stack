@@ -36,8 +36,9 @@ cp -a ./wait-for-it.sh /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERS
 docker stack deploy --with-registry-auth --compose-file docker-compose.init.yml $STACK_SERVICE
 sleep 30
 
+# TODO later...
 # prepare konga db
-docker stack deploy --with-registry-auth --compose-file docker-compose.init2.yml $STACK_SERVICE
-sleep 30
+#docker stack deploy --with-registry-auth --compose-file docker-compose.init2.yml $STACK_SERVICE
+#sleep 30
 
 #docker rm $(docker ps -f "status=exited" -q)
