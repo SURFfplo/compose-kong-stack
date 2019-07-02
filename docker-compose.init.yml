@@ -30,11 +30,9 @@ services:
     image: 192.87.106.18:56001/kong-oidc:0.1
     secrets:
       - kong_db_dba_password
-    depends_on:
-      - kong-db
     networks:
       - $STACK_NETWORK
-    command: "kong migrations bootstrap"
+    command: bash -c "/wait-for-it.sh -t 30 kong-db:5432 && kong migrations bootstrap"
     deploy:
       replicas: 1
       restart_policy:
@@ -44,7 +42,7 @@ services:
       - $STACK_PORT_ADMIN:8001
     environment:
       KONG_DATABASE:         postgres
-      KONG_PG_HOST:          ${STACK_SERVICE}_kong-db
+      KONG_PG_HOST:          kong-db
       KONG_PG_PORT:          5432
       KONG_PG_DATABASE:      api-gw
       KONG_PG_USER:          kong
@@ -56,3 +54,6 @@ services:
       KONG_PROXY_LISTEN:     0.0.0.0:8000
       KONG_ADMIN_LISTEN:     0.0.0.0:8001
       KONG_PLUGINS:          oidc
+    volumes:
+      - /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/tmp/wait-for-it.sh:/wait-for-it.sh
+

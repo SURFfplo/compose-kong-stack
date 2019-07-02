@@ -30,8 +30,6 @@ services:
     image: 192.87.106.18:56001/kong-oidc:0.1
     secrets:
       - kong_db_dba_password
-    depends_on:
-      - kong-db
     networks:
       - $STACK_NETWORK
     ports:
@@ -58,7 +56,7 @@ services:
       - kong_db_dba_password
     networks:
       - $STACK_NETWORK
-    command: "-c prepare_docker_env -a postgres"
+    command: bash -c "/wait-for-it.sh -t 30 kong-db:5432 && prepare_docker_env -a postgres"
     deploy:
       replicas: 1
       restart_policy:
@@ -76,3 +74,6 @@ services:
       DB_PASSWORD_FILE: /run/secrets/kong_db_dba_password
       DB_DATABASE:      konga_database
       KONGA_HOOK_TIMEOUT: 120000
+    volumes:
+      - /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/tmp/wait-for-it.sh:/wait-for-it.sh
+
