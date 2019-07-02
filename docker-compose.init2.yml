@@ -56,7 +56,7 @@ services:
       - kong_db_dba_password
     networks:
       - $STACK_NETWORK
-    command: bash -c "/wait-for-it.sh -t 30 kong-db:5432 && prepare_docker_env -a postgres"
+    command: bash -c "/wait-for-it.sh -t 30 kong-db:5432 && konga -c prepare_docker_env -a postgres"
     deploy:
       replicas: 1
       restart_policy:
