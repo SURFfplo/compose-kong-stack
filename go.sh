@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # defaults
-SERVICE=kong
+SERVICE=DEVkong
 VERSION=0.1
 NETWORK=dev-net
 PORT=57020
