@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # create nfs mount
-mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE-$STACK_VERSION/data
-mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE-$STACK_VERSION/psql
+mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/data
+mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/psql
 
 
 # remove any old secrest and configs
@@ -16,9 +16,9 @@ date |md5sum|awk '{print $1}' | docker secret create kong_db_dba_password -
 
 
 #create two run once services for initialisation purposes
-docker stack deploy --compose-file docker-compose.init.yml $STACK_SERVICE
+docker stack deploy --with-registry-auth --compose-file docker-compose.init.yml $STACK_SERVICE
 sleep 200
-docker stack deploy --compose-file docker-compose.init2.yml $STACK_SERVICE
+docker stack deploy --with-registry-auth --compose-file docker-compose.init2.yml $STACK_SERVICE
 sleep 200
 
 docker rm $(docker ps -f "status=exited" -q)

@@ -3,6 +3,10 @@ version: '3.7'
 networks: 
   dev-net:
     external: true
+  test-net:
+    external: true
+  exp-net:
+    external: true
 
 secrets:
   kong_db_dba_password:
@@ -12,18 +16,16 @@ services:
   kong-db:
     image: 192.87.106.18:56001/postgres:0.1
     volumes:
-      - /mnt/nfs/nfsdlo/$STACK_NETWORK/kong-0.1/psql:/var/lib/postgresql/data
+      - /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/psql:/var/lib/postgresql/data
     secrets:
       - kong_db_dba_password
     networks:
-      - dev-net
-    ports:
-      - "15432:5432"
+      - $STACK_NETWORK
     environment:
       POSTGRES_DB:       api-gw
       POSTGRES_USER:     kong
       POSTGRES_DB_PASSWORD_FILE: /run/secrets/kong_db_dba_password
-
+      
   kong-oidc:
     image: 192.87.106.18:56001/kong-oidc:0.1
     secrets:
@@ -31,12 +33,10 @@ services:
     depends_on:
       - kong-db
     networks:
-      - dev-net
+      - $STACK_NETWORK
     ports:
-      - "8000:8000" # Listener
-      - "8001:8001" # Admin API
-      - "8443:8443" # Listener  (SSL)
-      - "8444:8444" # Admin API (SSL)
+      - $STACK_PORT:8000
+      - $STACK_PORT_ADMIN:8001
     environment:
       KONG_DATABASE:         postgres
       KONG_PG_HOST:          kong-db
@@ -47,8 +47,8 @@ services:
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG:  /dev/stderr
       KONG_ADMIN_ERROR_LOG:  /dev/stderr
-      KONG_PROXY_LISTEN:     0.0.0.0:8000, 0.0.0.0:8443 ssl
-      KONG_ADMIN_LISTEN:     0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_PROXY_LISTEN:     0.0.0.0:8000
+      KONG_ADMIN_LISTEN:     0.0.0.0:8001
       KONG_PLUGINS:          oidc
 
   konga:
@@ -56,14 +56,14 @@ services:
     secrets:
       - kong_db_dba_password
     networks:
-      - dev-net
-    ports:
-      - "1337:1337" # Port for API frontend
+      - $STACK_NETWORK
     command: "-c prepare_docker_env -a postgres"
     deploy:
       replicas: 1
       restart_policy:
         condition: none  
+    ports:
+      - $STACK_PORT_ADMIN2:1337
     environment:
       NODE_ENV:         prep
       TOKEN_SECRET:     rwekaneewnkan
