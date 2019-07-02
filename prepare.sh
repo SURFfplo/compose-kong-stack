@@ -12,7 +12,9 @@ mkdir -p /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/tmp
 cp -a ./wait-for-it.sh /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/tmp
 
 
-
+########
+#SECRETS
+########
 # remove any old secrest and configs
 docker secret rm $(docker secret ls -f name=kong -q)
 
@@ -23,23 +25,17 @@ docker secret rm $(docker secret ls -f name=kong -q)
 date |md5sum|awk '{print $1}' | docker secret create kong_db_dba_password -
 
 
+#############################
+#prepare db's with containers
+#############################
 #create two run once services for initialisation purposes
+
+# prepare kong db
 docker stack deploy --with-registry-auth --compose-file docker-compose.init.yml $STACK_SERVICE
-sleep 200
+sleep 30
+
+# prepare konga db
 docker stack deploy --with-registry-auth --compose-file docker-compose.init2.yml $STACK_SERVICE
-sleep 200
+sleep 30
 
-docker rm $(docker ps -f "status=exited" -q)
-
-#docker stack deploy -c docker-compose.yml $STACK_SERVICE
-
-
-# alternative sollutions
-# to do remover services taht we will not use for initial
-# docker stack deploy --compose-file docker-compose.yml -c docker-compose.prod.yml $STACK_SERVICE
-# docker service rm $STACK_SERVICE_konga 
-#"woit for 30 seconds for kong-db container to fully come up" 
-
-# Initialize kong container
-#temp_service < docker service create --restart-condition=none --detach=true --secret kong_db_dba_password --name kong-temp1 --env KONG_DATABASE=postgres --env KONG_PG_HOST=kong-db --env KONG_PG_PORT=5432 --env KONG_PG_DATABASE=api-gw --env KONG_PG_DB_PASSWORD_FILE=/run/secrets/kong_db_dba_password --network appnet kong-oidc kong migrations bootstrap
-# docker stack rm $temp_service 
+#docker rm $(docker ps -f "status=exited" -q)
