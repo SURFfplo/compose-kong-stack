@@ -37,7 +37,7 @@ services:
       - $STACK_PORT_ADMIN:8001
     environment:
       KONG_DATABASE:         postgres
-      KONG_PG_HOST:          ${STACK_SERVICE}_kong-db
+      KONG_PG_HOST:          kong-db
       KONG_PG_PORT:          5432
       KONG_PG_DATABASE:      api-gw
       KONG_PG_USER:          kong
@@ -62,7 +62,7 @@ services:
 #      NODE_ENV:         production
 #      TOKEN_SECRET:     rwekaneewnkan
 #      DB_ADAPTER:       postgres
-#      DB_HOST:          ${STACK_SERVICE}_kong-db
+#      DB_HOST:          kong-db
 #      DB_PORT:          5432
 #      DB_USER:          kong
 #      DB_MYUSER:        kong
