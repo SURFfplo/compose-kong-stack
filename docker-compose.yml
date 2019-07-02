@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_DB:       api-gw
       POSTGRES_USER:     kong
-      POSTGRES_PASSWORD_FILE: /run/secrets/kong_db_dba_password
+      POSTGRES_PG_PASSWORD_FILE: /run/secrets/kong_db_dba_password
       
   kong-oidc:
     image: 192.87.106.18:56001/kong-oidc:0.1
