@@ -15,14 +15,16 @@ cp -a ./wait-for-it.sh /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERS
 ########
 #SECRETS
 ########
+# TODO: make this work for multiple environments...
+
 # remove any old secrest and configs
-docker secret rm $(docker secret ls -f name=kong -q)
+#docker secret rm $(docker secret ls -f name=kong -q)
 
 # create secrets for database
 # e.g. date |md5sum|awk '{print $1}' | docker secret create my_secret -
 # or cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 | docker secret create canvas_db_dba_password -
 # or visible printf "pasword"  | docker secret create canvas_db_dba_password -
-date |md5sum|awk '{print $1}' | docker secret create kong_db_dba_password -
+#date |md5sum|awk '{print $1}' | docker secret create kong_db_dba_password -
 
 
 #############################
