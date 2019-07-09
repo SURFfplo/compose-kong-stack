@@ -15,6 +15,15 @@ secrets:
 services:
   kong-db:
     image: 192.87.106.18:56001/postgres:0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpu: '1.0'
+          memory: 512M
+      restart_policy:
+        condition: any
     volumes:
       - /mnt/nfs/nfsdlo/$STACK_NETWORK/$STACK_SERVICE/$STACK_VERSION/psql:/var/lib/postgresql/data
     secrets:
@@ -28,6 +37,15 @@ services:
       
   kong-oidc:
     image: 192.87.106.18:56001/kong-oidc:0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpu: '1.0'
+          memory: 256M
+      restart_policy:
+        condition: any
     secrets:
       - kong_db_dba_password
     networks:
